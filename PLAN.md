@@ -1,7 +1,9 @@
 # NYC Restaurant Search - Project Plan
 
 ## Goal
-Build a vector-based retrieval system to find restaurants in NYC that match a user's natural language description.
+Build a vector-based retrieval system to find restaurants in NYC using two modes:
+1. Matching a user's natural language description.
+2. Finding restaurants similar to a given restaurant.
 
 ## Tech Stack
 ### Core
@@ -33,14 +35,15 @@ Build a vector-based retrieval system to find restaurants in NYC that match a us
 1.  **Setup & Data Acquisition**
     -   Initialize project structure.
     -   Set up PostgreSQL and `pgvector`.
-    -   Acquire NYC restaurant dataset (e.g., Yelp dataset subset or scrape).
+    -   Acquire dataset: import `trip advisor restaurents 10k` dataset.
 2.  **Data Processing & Embedding**
-    -   Clean and preprocess restaurant text data (reviews, descriptions, categories).
+    -   Clean and preprocess restaurant text data (combining `Catagory`, `Reveiw Comment`, and `Popular food`).
     -   Generate embeddings for each restaurant using the chosen model.
     -   Store embeddings in Postgres.
 3.  **Retrieval System**
-    -   Implement the search endpoint: Query embedding -> Cosine similarity search.
-    -   Add filters (e.g., by price, location, rating).
+    -   Mode 1: Natural Language Search endpoint (Query embedding -> Cosine similarity search).
+    -   Mode 2: Find Similar Restaurants endpoint (Restaurant embedding -> Cosine similarity search).
+    -   Add filters (e.g., minimum `Number of review`, or `Online Order` availability).
 4.  **User Interface**
-    -   Build a Streamlit app to accept queries and display results.
-    -   Show restaurant details (name, rating, address, similarity score).
+    -   Build a Streamlit app to accept queries (or select a restaurant) and display results.
+    -   Show restaurant details (`Title`, `Catagory`, `Reveiw Comment`, `Popular food`, `Online Order`, similarity score).
