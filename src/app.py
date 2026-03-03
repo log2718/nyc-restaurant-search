@@ -15,33 +15,33 @@ st.markdown("""
     }
     /* Light yellow page background */
     .stApp {
-        background-color: #fff9e6;
+        background-color: #fce8b2;
     }
     /* Slightly darker yellow/orange input fields */
     .stTextInput input, .stSelectbox select {
-        background-color: #fce8b2 !important;
+        background-color: #fff9e6 !important;
     }
     div[data-baseweb="input"] {
-        background-color: #fce8b2 !important;
+        background-color: #fff9e6 !important;
     }
     div[data-baseweb="select"] > div {
         background-color: #fce8b2 !important;
     }
     /* Title banner – more red than pink */
     .title-banner {
-        background-color: #f5a6a6;
+        background-color: #e86060;
         padding: 1rem 2rem;
         border-radius: 8px;
         margin-bottom: 1rem;
     }
     .title-banner h1 {
         margin: 0;
-        color: #721c24;
+        color: #ffffff;
     }
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="title-banner"><h1>🍕 NYC Restaurant Vector Search</h1></div>', unsafe_allow_html=True)
+st.markdown('<div class="title-banner"><h1>NYC Restaurant Vector Search</h1></div>', unsafe_allow_html=True)
 
 # Sidebar filters
 st.sidebar.header("Filters")
