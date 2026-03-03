@@ -25,7 +25,7 @@ st.markdown("""
         background-color: #fff9e6 !important;
     }
     div[data-baseweb="select"] > div {
-        background-color: #fce8b2 !important;
+        background-color: #fff9e6 !important;
     }
     /* Title banner – more red than pink */
     .title-banner {
@@ -70,38 +70,42 @@ else:
         st.error("Could not connect to the API. Is FastAPI running?")
 
 if st.button("Search", type="primary"):
-    with st.spinner("Searching vectors..."):
-        try:
-            params = {
-                "online_order_only": online_order_only,
-                "min_reviews": min_reviews,
-                "limit": top_k,
-            }
-            if search_q:
-                params["q"] = search_q
-            if search_id:
-                params["restaurant_id"] = search_id
+    # Validate that we have a search query or restaurant ID
+    if not search_q and not search_id:
+        st.error("Please enter a search query or select a restaurant to find similar ones.")
+    else:
+        with st.spinner("Searching vectors..."):
+            try:
+                params = {
+                    "online_order_only": online_order_only,
+                    "min_reviews": min_reviews,
+                    "limit": top_k,
+                }
+                if search_q:
+                    params["q"] = search_q
+                if search_id:
+                    params["restaurant_id"] = search_id
 
-            res = requests.get(f"{API_URL}/api/search", params=params)
+                res = requests.get(f"{API_URL}/api/search", params=params)
 
-            if res.status_code == 200:
-                results = res.json()
-                if not results:
-                    st.warning("No matching restaurants found. Try adjusting your filters.")
+                if res.status_code == 200:
+                    results = res.json()
+                    if not results:
+                        st.warning("No matching restaurants found. Try adjusting your filters.")
+                    else:
+                        st.write(f"### Found {len(results)} matches:")
+
+                        for row in results:
+                            left, right = st.columns([3, 2])
+                            with left:
+                                st.markdown(f"**{row['title']}** — `{row['similarity']:.4f} cosine similarity`")
+                                st.write(f"**Category:** {row['category']} · **Reviews:** {row['number_of_reviews']} · **Online Order:** {'🟢 Yes' if row['online_order'] else '🔴 No'}")
+                                if row['popular_food'] and row['popular_food'] != 'No':
+                                    st.write(f"**Popular Food:** {row['popular_food']}")
+                            with right:
+                                st.info(f"{row['review_comment']}")
+                            st.markdown("---")
                 else:
-                    st.write(f"### Found {len(results)} matches:")
-
-                    for row in results:
-                        left, right = st.columns([3, 2])
-                        with left:
-                            st.markdown(f"**{row['title']}** — `{row['similarity']:.4f} cosine similarity`")
-                            st.write(f"**Category:** {row['category']} · **Reviews:** {row['number_of_reviews']} · **Online Order:** {'🟢 Yes' if row['online_order'] else '🔴 No'}")
-                            if row['popular_food'] and row['popular_food'] != 'No':
-                                st.write(f"**Popular Food:** {row['popular_food']}")
-                        with right:
-                            st.info(f"{row['review_comment']}")
-                        st.markdown("---")
-            else:
-                st.error(f"API Error: {res.text}")
-        except Exception as e:
-            st.error(f"Failed to fetch results: {e}")
+                    st.error(f"API Error: {res.text}")
+            except Exception as e:
+                st.error(f"Failed to fetch results: {e}")
